@@ -1,0 +1,30 @@
+{
+  "name": "apieventos",
+  "version": "1.0.0",
+  "description": "Api para uma aplicação de eventos",
+  "main": "server.js",
+  "scripts": {
+    "devStartAuth": "nodemon authServer.js",
+    "devStartEvent": "nodemon eventServer.js"
+  },
+  "keywords": [
+    "api",
+    "eventos",
+    "models"
+  ],
+  "author": "Lucas Fauri",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "moment": "^2.29.4",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.22",
+    "pg-promise": "^11.4.3",
+    "redis": "^4.6.5",
+    "sequelize": "^6.31.0",
+    "winston": "^3.8.2"
+  }
+}
