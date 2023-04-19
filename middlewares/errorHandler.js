@@ -10,7 +10,9 @@ const errorMappings = {
     'Email não encontrado': 404,
     'Usuario não encontrado!': 404,
     'Senha incorreta': 403,
-    'Erro ao fazer checkIn, usuario não está inscrito no evento': 401
+    'Erro ao fazer checkIn, usuario não está inscrito no evento': 401,
+    'Já existe um certificado cadastrado para esse usuario neste evento!': 409,
+    'usuario já inscrito no evento': 409 
 }
 
 //Verifica se o erro está no mapa de erros, caso não estejá essa função retornatá "Algo deu errado" com status code 500

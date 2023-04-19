@@ -33,6 +33,24 @@ exports.getEvents = async function () {
     }
 }
 
+
+//Retorna os eventos que o usuario está inscrito
+exports.getEventsOfUser = async function (userId) {
+    try {
+        await database.sync();
+        const events = await EventUser.findAll({
+            where: {UserId: userId},
+            include: {
+                model: Event,
+                attributes: ['id', 'name', 'description', 'vacancies', 'vacanciesFilled']
+            }
+        });
+        return events.map(eventUser => eventUser.Event);
+    } catch (e) {
+        throw new Error(e)
+    }
+}
+
 //Retorna evento pelo id
 exports.getEventById = async function (eventId) {
     try {
@@ -88,10 +106,12 @@ exports.registerCheckInOnEvent = async function (eventId, userId) {
         const eventUser = await EventUser.findOne({
             where: { UserId: userId, EventId: eventId }
         });
-        console.log(eventUser)
-        if (eventUser == null){
+        //Verifica se o usuario está cadastrado
+        if (!eventUser || eventUser.UserId === null) {
             return false
         }
+        //verifica se o usuario já fez check in no evento
+        if(eventUser.presence) throw new Error( "usuario já inscrito no evento")
         eventUser.presence = true;
         eventUser.save();
         return true
@@ -100,11 +120,17 @@ exports.registerCheckInOnEvent = async function (eventId, userId) {
     }
 }
 
-//CANCELA O USUARIO DO EVENTO
-exports.deleteUserFromEvent = async function (eventId, userId) {
+//DESFAZ A INSCRIÇÂO DO USUARIO NO EVENTO
+exports.unregisterUserFromEvent = async function (eventId, userId) {
     await database.sync();
-    let eventUser = await EventUser.findOne({
-        where: { UserId: userId, EventId: eventId }
-    });
-    return eventUser.delete();
-}
+    const event = await Event.findByPk(eventId);
+    try {
+        if (await event.removeUser(userId)) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (e) {
+        throw new Error(e);
+    }
+};

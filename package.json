@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "devStartAuth": "nodemon authServer.js",
-    "devStartEvent": "nodemon eventServer.js"
+    "devStartEvent": "nodemon eventServer.js",
+    "devStartComms": "nodemon commsServer.js"
   },
   "keywords": [
     "api",
@@ -22,6 +23,7 @@
     "moment": "^2.29.4",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.22",
+    "pdfkit": "^0.13.0",
     "pg-promise": "^11.4.3",
     "redis": "^4.6.5",
     "sequelize": "^6.31.0",
