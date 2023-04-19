@@ -3,7 +3,7 @@ const router = express.Router();
 const certificateController = require('../controllers/certificateController');
 
 
-//get - endport: ./certificate/validade/:userId/:eventId
+//get - endport: ./certificate/validate/:userId/:eventId
 router.get('/validate/:userId/:eventId', async (req, res, next) => {
     try {
         const userId = req.params.userId;
@@ -14,6 +14,28 @@ router.get('/validate/:userId/:eventId', async (req, res, next) => {
         next(e)
     }
 })
+
+
+
+//get -  Endpoint: ./certificate/generate-pdf/:userId/:eventId
+router.get('/generate-pdf/:userId/:eventId', async (req, res) => {
+    const userId = req.params.userId;
+    const eventId = req.params.eventId;
+  
+    try {
+      const pdf = await certificateController.generatePDF(userId, eventId);
+  
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename=certificado.pdf');
+  
+      res.send(pdf);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Ocorreu um erro ao gerar o certificado');
+    }
+  });
+  
+
 
 
 module.exports = router;

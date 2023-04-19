@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 //VALIDA OS TOKENS DE USUARIO LOGADO
 exports.validarToken = function (req, res, next) {
-
+    const pathRegex = /^\/certificate\/generate-pdf\/\d+\/\d+$/;
     //VERIFICA SE A REQUISIÇÃO É POST
     if (req.method === 'POST') {
         //VERIFICA A ROTA
@@ -15,6 +15,11 @@ exports.validarToken = function (req, res, next) {
         }
         if (req.path === '/user/login') {
             return next();
+        }
+    }
+    if(req.method === 'GET'){
+        if (pathRegex.test(req.path)){
+            return next()
         }
     }
     const token = req.headers.authorization;
