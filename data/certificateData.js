@@ -22,11 +22,11 @@ exports.getCertificate = async function (userId, eventId) {
         include: [
             {
                 model: User,
-                attributes: ['name']
+                attributes: ['id','name']
             },
             {
                 model: Event,
-                attributes: ['name', 'description']
+                attributes: ['id','name', 'description']
             }
         ]
     });
@@ -37,7 +37,9 @@ exports.getCertificate = async function (userId, eventId) {
     else {
         return {
             certificateId: certificate.id,
+            userId: certificate.User.id,
             userName: certificate.User.name,
+            eventId: certificate.Event.id,
             eventName: certificate.Event.name,
             eventDescription: certificate.Event.description
         };
