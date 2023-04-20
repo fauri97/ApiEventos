@@ -11,6 +11,10 @@ exports.saveUser = async function (user) {
     return await userData.saveUser(user);
 }
 
+exports.getUserById = async function (id){
+    return await userData.getUserById(id);
+}
+
 //Valida se os dados vieram certos, gera um token para o usuario fazer requisições nos outros microserviços e retorna o usuario sem a senha
 exports.login = async function (user) {
     const existingUser = await userData.getUserByEmail(user.email);
