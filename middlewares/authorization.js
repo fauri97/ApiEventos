@@ -6,7 +6,8 @@ const jwt = require('jsonwebtoken');
 
 //VALIDA OS TOKENS DE USUARIO LOGADO
 exports.validarToken = function (req, res, next) {
-    const pathRegex = /^\/certificate\/generate-pdf\/\d+\/\d+$/;
+    const pathRegexGenerate = /^\/certificate\/generate-pdf\/\d+\/\d+$/;
+    const pathRegexValidate = /^\/certificate\/validate\/\d+\/\d+$/;
     //VERIFICA SE A REQUISIÇÃO É POST
     if (req.method === 'POST') {
         //VERIFICA A ROTA
@@ -17,8 +18,11 @@ exports.validarToken = function (req, res, next) {
             return next();
         }
     }
-    if(req.method === 'GET'){
-        if (pathRegex.test(req.path)){
+    if (req.method === 'GET') {
+        if (pathRegexGenerate.test(req.path)) {
+            return next()
+        }
+        if (pathRegexValidate.test(req.path)) {
             return next()
         }
     }
@@ -45,6 +49,6 @@ exports.validarToken = function (req, res, next) {
 }
 
 //Adiciona o token a blacklist
-exports.blockToken = function (token){
+exports.blockToken = function (token) {
     blockedTokens.push(token)
 }
