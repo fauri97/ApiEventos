@@ -2,6 +2,7 @@ const certificateData = require("../data/certificateData");
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 
+//Gera o certificado quando o ususario faz o checkIn
 exports.generateCertificate = async function (userId, eventId) {
   const certificate = await certificateData.getCertificate(userId, eventId);
   if (!certificate || certificate == undefined) {
@@ -13,6 +14,7 @@ exports.generateCertificate = async function (userId, eventId) {
   }
 };
 
+//Valida o certificado provando que é real
 exports.getCertificate = async function (userId, eventId) {
   const certificate = await certificateData.getCertificate(userId, eventId);
   return {
@@ -20,6 +22,16 @@ exports.getCertificate = async function (userId, eventId) {
   };
 };
 
+//Retorna todos os certificados e eventos que o usuario já esteve presente
+exports.getAllCertificatesOfAUser = async function (userId) {
+  try {
+    return await certificateData.getAllCertificatesOfAUser(userId);
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
+//Gera o pdf do certificado
 exports.generatePDF = async function (userId, eventId) {
   const certificate = await certificateData.getCertificate(userId, eventId);
   const doc = new PDFDocument({ size: "A4", margin: 50 });

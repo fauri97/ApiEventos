@@ -45,3 +45,24 @@ exports.getCertificate = async function (userId, eventId) {
         };
     }
 };
+
+exports.getAllCertificatesOfAUser = async function (userId) {
+    try{
+        const certificates = await Certificate.findAll({
+            include: [
+                {
+                    model: User,
+                    attributes: ['id','name']
+                },
+                {
+                    model: Event,
+                    attributes: ['id','name', 'description']
+                }
+            ],
+            where: {UserId: userId}
+        });
+        return certificates;
+    }catch(e){
+        throw new Error(e);
+    }
+}

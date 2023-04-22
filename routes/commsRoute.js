@@ -13,7 +13,19 @@ router.get('/validate/:userId/:eventId', async (req, res, next) => {
     } catch (e) {
         next(e)
     }
-})
+});
+
+
+//get - endport: ./certificate/:userId
+router.get('/:userId', async (req, res, next) => {
+  try{
+    const userId = req.params.userId
+    const certificates = await certificateController.getAllCertificatesOfAUser(userId);
+    res.status(200).send(certificates);
+  } catch(e){
+    next(e);
+  }
+});
 
 
 

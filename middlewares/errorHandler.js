@@ -10,6 +10,7 @@ const errorMappings = {
     'Email não encontrado': 404,
     'Usuario não encontrado!': 404,
     'Senha incorreta': 403,
+    'Usuario não registrado no evento!': 404,
     'Erro ao fazer checkIn, usuario não está inscrito no evento': 401,
     'Já existe um certificado cadastrado para esse usuario neste evento!': 409,
     'usuario já inscrito no evento': 409 

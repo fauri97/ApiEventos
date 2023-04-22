@@ -69,6 +69,19 @@ router.get("/user/:userId", async (req, res, next) => {
     };
 });
 
+//get - endpoint./event/user/:userId/:eventId
+//retorna apenas o evento onde o usuario está cadastrado nele
+router.get("/user/:userId/:eventId", async (req, res, next) => {
+    try {
+        const userId = req.params.userId;
+        const eventId = req.params.eventId;
+        const events = await eventController.getEventsUserEvent(userId,eventId);
+        res.status(200).json(events);
+    } catch (e) {
+        next(e);
+    };
+});
+
 
 
 //delete - endpoint ./registration/:userId/:eventId

@@ -23,7 +23,6 @@ router.post("/login", async (req,res,next) => {
         //cria o objeto user que recebeu do corpo da requisição e envia para a classe userController na função login, espera o usuario com um token
         //para enviar para o front
         const user = req.body
-        console.log(user.email)
         const newUser = await userController.login(user);
         res.status(201).json(newUser);
     }catch (e){

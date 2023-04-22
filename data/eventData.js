@@ -25,7 +25,8 @@ exports.getEvents = async function () {
         const events = await Event.findAll({
             attributes: {
                 exclude: ["createdAt", "updatedAt"]
-            }
+            },
+            order: [['id', 'ASC']],
         })
         return events
     } catch (e) {
@@ -43,9 +44,27 @@ exports.getEventsOfUser = async function (userId) {
             include: {
                 model: Event,
                 attributes: ['id', 'name', 'description', 'vacancies', 'vacanciesFilled']
-            }
+            },
+            order: [['id', 'ASC']],
         });
         return events.map(eventUser => eventUser.Event);
+    } catch (e) {
+        throw new Error(e)
+    }
+}
+
+//retorna o evento que o usuario está inscrito
+exports.getEventsUserEvent = async function (userId,eventId) {
+    try {
+        await database.sync();
+        const events = await EventUser.findOne({
+            where: {UserId: userId, EventId: eventId},
+            include: {
+                model: Event,
+                attributes: ['id', 'name', 'description', 'vacancies', 'vacanciesFilled']
+            }
+        });
+        return events;
     } catch (e) {
         throw new Error(e)
     }

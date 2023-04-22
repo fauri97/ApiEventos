@@ -8,7 +8,18 @@ const jwt = require("jsonwebtoken");
 exports.saveUser = async function (user) {
     const existingUser = await userData.getUserByEmail(user.email);
     if (existingUser) throw new Error('Já existe um usuario com esse email');
-    return await userData.saveUser(user);
+    const newUser = await userData.saveUser(user);
+   if(newUser){
+    console
+    const token = jwt.sign(
+        { name: newUser.name },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "1h" }
+    );
+    //Adiciona o token ao objeto usuario
+    newUser.dataValues.token = token;
+   }
+   return newUser;
 }
 
 exports.getUserById = async function (id){

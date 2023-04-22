@@ -19,6 +19,15 @@ exports.getEventsOfUser = async function (userId) {
   return await eventData.getEventsOfUser(userId);
 };
 
+//Retorna um evento onde o usuairo está registrado
+exports.getEventsUserEvent = async function (userId, eventId) {
+  const event = await eventData.getEventsUserEvent(userId, eventId);
+  if (event != null) {
+    return event;
+  }
+  throw new Error("Usuario não registrado no evento!");
+};
+
 //INSCREVE USUARIO NO EVENTO
 exports.registerUserOnEvent = async function (eventId, userId) {
   let event = await eventData.getEventById(eventId);
@@ -32,7 +41,7 @@ exports.registerUserOnEvent = async function (eventId, userId) {
     const subject = `Inscrição do evento: ${event.name}`;
     const body = `Inscrição do evento efetuada com sucesso!`;
     const user = await userController.getUserById(userId);
-    const email = emailController.createEmail(user.email, subject, body);
+    const email = emailController.createEmail(user.email,subject,body);
     transporter.sendMail(email, (error, info) => {
       if (error) {
         console.log(error);
@@ -54,17 +63,21 @@ exports.registerUserOnEvent = async function (eventId, userId) {
 //REGISTRA O CHECK IN NO EVENTO
 exports.registerCheckInOnEvent = async function (eventId, userId) {
   //Tenta fazer o registro do usuario no evento
-
-  if (await eventData.registerCheckInOnEvent(eventId, userId)) {
-    //Ao fazer checkin gera automaticamente um certificado de presença
-    certificateController.generateCertificate(userId, eventId);
-    //Retorna mensagem de sucesso
-    return { message: "checkin efeituado com sucesso!" };
-  } else {
-    //Caso o usuario já havia se registrado retorna esse erro
-    throw new Error(
-      "Erro ao fazer checkIn, usuario não está inscrito no evento"
-    );
+  try {
+    if (await eventData.registerCheckInOnEvent(eventId, userId)) {
+      //Ao fazer checkin gera automaticamente um certificado de presença
+      certificateController.generateCertificate(userId, eventId);
+      //Retorna mensagem de sucesso
+      return { message: "checkin efeituado com sucesso!" };
+    } else {
+      
+      //Caso o usuario já havia se registrado retorna esse erro
+      throw new Error(
+        "Erro ao fazer checkIn, usuario não está inscrito no evento"
+      );
+    }
+  } catch (e) {
+    throw new Error(e);
   }
 };
 
