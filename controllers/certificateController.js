@@ -76,7 +76,7 @@ exports.generatePDF = async function (userId, eventId) {
       .font("Times-Roman")
       .fontSize(14)
       .text(
-        `Para validar o certificado acesse: localhost:8082/certificate/validate/${certificate.userId}/${certificate.eventId}`,
+        `Para validar o certificado acesse: 177.44.248.80:8082/certificate/validate/${certificate.userId}/${certificate.eventId}`,
         { align: "end" }
       );
     doc.moveDown();
