@@ -1,9 +1,9 @@
 require("dotenv").config();
+const transporter = require("../utils/email");
+const logger = require("../utils/logger");
 
-exports.createEmail = async function (email, Subject, Body) {
-  console.log(email);
-  console.log(Subject);
-  console.log(Body);
+
+exports.sendEmail = async function (email, Subject, Body) {
   if (!email || !Subject || !Body) {
     throw new Error("Invalid email parameters");
   }
@@ -14,5 +14,13 @@ exports.createEmail = async function (email, Subject, Body) {
     subject: Subject,
     text: Body,
   };
-  return mailOptions;
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      logger.error(error)
+    } else {
+      logger.info('Email enviado com Sucesso')
+    }
+  });
+  
 };

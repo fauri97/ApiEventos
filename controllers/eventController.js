@@ -1,8 +1,8 @@
+require("dotenv").config();
 const eventData = require("../data/eventData");
 const certificateController = require("./certificateController");
 const userController = require("./userController");
 const emailController = require("./emailController");
-const transporter = require("../utils/email");
 
 //Passa o evento para salvar no banco de dados
 exports.saveEvent = async function (event) {
@@ -37,23 +37,21 @@ exports.registerUserOnEvent = async function (eventId, userId) {
   }
   //Registra o usuario no evento
   if (await eventData.registerUserOnEvent(eventId, userId)) {
-    /*
+
+    //dados do corpo do email
+    const user = await userController.getUserById(userId);
     const subject = `Inscrição do evento: ${event.name}`;
     const body = `Inscrição do evento efetuada com sucesso!`;
-    const user = await userController.getUserById(userId);
-    const email = emailController.createEmail(user.email,subject,body);
-    transporter.sendMail(email, (error, info) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Email enviado: " + info.response);
-      }
-    });
-    */
+
+    //Envia o email de confirmação de registro no evento
+    emailController.sendEmail(user.email, subject, body)
+
     //Atualiza o numero de usuarios registrados no evento
     event.vacanciesFilled++;
+
     //Atualiza o banco
     await eventData.updateEvent(event);
+
     //Retorna a mensagem de sucesso
     return { message: "Usuario cadastrado no evento!" };
   }
@@ -65,12 +63,25 @@ exports.registerCheckInOnEvent = async function (eventId, userId) {
   //Tenta fazer o registro do usuario no evento
   try {
     if (await eventData.registerCheckInOnEvent(eventId, userId)) {
+
+      //retorna o evento
+      let event = await eventData.getEventById(eventId);
+
+      //dados do corpo do email
+      const user = await userController.getUserById(userId);
+      const subject = `Presença do evento: ${event.name}`;
+      const body = `Presença no evento efetuada com sucesso!`;
+
+      //envia o email
+      emailController.sendEmail(user.email, subject, body);
+
       //Ao fazer checkin gera automaticamente um certificado de presença
       certificateController.generateCertificate(userId, eventId);
+
       //Retorna mensagem de sucesso
       return { message: "checkin efeituado com sucesso!" };
     } else {
-      
+
       //Caso o usuario já havia se registrado retorna esse erro
       throw new Error(
         "Erro ao fazer checkIn, usuario não está inscrito no evento"
@@ -91,6 +102,14 @@ exports.unregisterUserFromEvent = async function (eventId, userId) {
     event.vacanciesFilled--;
     //atualiza o evento no banco de dados
     await eventData.updateEvent(event);
+
+    //dados do corpo do email
+    const user = await userController.getUserById(userId);
+    const subject = `Inscrição do evento: ${event.name} cancelada`;
+    const body = `Inscrição no evento foi cancelada!`;
+
+    //envia o email
+    emailController.sendEmail(user.email, subject, body);
     //retona mensagem de sucesso ao desinscrever o usuario do evento
     return {
       message: `Usuario desfez a inscrição no evento ${event.name}`,
