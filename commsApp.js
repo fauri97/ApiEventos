@@ -6,7 +6,6 @@ const errorHandler = require('./middlewares/errorHandler').errorHandler;
 const routeError = require("./middlewares/routeError").routeError;
 const morganMiddleware = require("./middlewares/morgan.middleware");
 const commsRoute = require('./routes/commsRoute');
-const emailRoute = require ('./routes/emailRoute')
 
 
 
