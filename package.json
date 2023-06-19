@@ -6,7 +6,8 @@
   "scripts": {
     "devStartAuth": "nodemon authServer.js",
     "devStartEvent": "nodemon eventServer.js",
-    "devStartComms": "nodemon commsServer.js"
+    "devStartComms": "nodemon commsServer.js",
+    "test": "jest --env node --detectOpenHandles --forceExit"
   },
   "keywords": [
     "api",
@@ -16,7 +17,9 @@
   "author": "Lucas Fauri",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.4.0",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
@@ -29,5 +32,8 @@
     "redis": "^4.6.5",
     "sequelize": "^6.31.0",
     "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0"
   }
 }

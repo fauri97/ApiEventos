@@ -10,7 +10,6 @@ exports.saveUser = async function (user) {
     if (existingUser) throw new Error('Já existe um usuario com esse email');
     const newUser = await userData.saveUser(user);
    if(newUser){
-    console
     const token = jwt.sign(
         { name: newUser.name },
         process.env.ACCESS_TOKEN_SECRET,
@@ -52,4 +51,14 @@ exports.login = async function (user) {
 exports.logout = async function (token) {
     blockTOken.blockToken(token);
     return {message: 'Usuario deslogado!'};
+};
+
+//Deleta o usuario pelo id
+exports.deleteUserByID = async function (id) {
+    return await userData.deleteUserByID(id);
+};
+
+//atualiza um usuario
+exports.updateUser = async function (id, user){
+    return await userData.updateUser (id,user);
 };

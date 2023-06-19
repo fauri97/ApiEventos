@@ -37,21 +37,18 @@ exports.registerUserOnEvent = async function (eventId, userId) {
   }
   //Registra o usuario no evento
   if (await eventData.registerUserOnEvent(eventId, userId)) {
-
     //dados do corpo do email
     const user = await userController.getUserById(userId);
     const subject = `Inscrição do evento: ${event.name}`;
     const body = `Inscrição do evento efetuada com sucesso!`;
 
     //Envia o email de confirmação de registro no evento
-    emailController.sendEmail(user.email, subject, body)
+    emailController.sendEmail(user.email, subject, body);
 
     //Atualiza o numero de usuarios registrados no evento
     event.vacanciesFilled++;
-
     //Atualiza o banco
     await eventData.updateEvent(event);
-
     //Retorna a mensagem de sucesso
     return { message: "Usuario cadastrado no evento!" };
   }
@@ -63,7 +60,6 @@ exports.registerCheckInOnEvent = async function (eventId, userId) {
   //Tenta fazer o registro do usuario no evento
   try {
     if (await eventData.registerCheckInOnEvent(eventId, userId)) {
-
       //retorna o evento
       let event = await eventData.getEventById(eventId);
 
@@ -81,7 +77,6 @@ exports.registerCheckInOnEvent = async function (eventId, userId) {
       //Retorna mensagem de sucesso
       return { message: "checkin efeituado com sucesso!" };
     } else {
-
       //Caso o usuario já havia se registrado retorna esse erro
       throw new Error(
         "Erro ao fazer checkIn, usuario não está inscrito no evento"
@@ -117,4 +112,9 @@ exports.unregisterUserFromEvent = async function (eventId, userId) {
   }
   //Retorna um erro caso não consiga desfazer a inscrição do usuario
   throw new Error("Ocorreu um erro ao desfazer a inscrição do usuario");
+};
+
+//delete a event
+exports.deleteEvent = async function (id) {
+  return await eventData.deleteEvent(id);
 };

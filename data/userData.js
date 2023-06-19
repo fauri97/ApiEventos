@@ -36,6 +36,7 @@ exports.getUserByEmail = async function (email) {
   }
 };
 
+//get User by id
 exports.getUserById = async function (id) {
   try {
     return User.findByPk(id, {
@@ -44,6 +45,33 @@ exports.getUserById = async function (id) {
       },
     });
   } catch (e) {
+    throw new Error(e);
+  }
+};
+
+//delete user by id
+exports.deleteUserByID = async function (id) {
+  try {
+    return User.destroy({
+      where: {id: id},
+    });
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
+//update a user
+exports.updateUser = async function (id, userUpdated) {
+  const user = await User.findByPk(id);
+  if (user === null){
+    throw new Error('User not found')
+  }
+  try{
+    if(userUpdated.name != undefined) user.name = userUpdated.name
+    if(userUpdated.password != undefined) user.password = userUpdated.password
+    if(userUpdated.email != undefined) user.email = userUpdated.email
+    return user.save();
+  } catch (e){
     throw new Error(e);
   }
 };
